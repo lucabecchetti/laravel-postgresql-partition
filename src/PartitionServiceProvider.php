@@ -3,6 +3,7 @@
 namespace Brokenice\LaravelPgsqlPartition;
 
 use Brokenice\LaravelPgsqlPartition\Connectors\ConnectionFactory;
+use Brokenice\LaravelPgsqlPartition\Http\RequestCompat;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\DatabaseServiceProvider;
 
@@ -33,6 +34,31 @@ class PartitionServiceProvider extends DatabaseServiceProvider
         });
 
         $this->registerCommands();
+    }
+
+    /**
+     * Bootstrap any application services.
+     * Replaces the current HTTP request with RequestCompat to avoid Symfony 7.4+
+     * deprecation when any code calls Request::get() (e.g. other packages).
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        if (! class_exists(\Illuminate\Http\Request::class)) {
+            return;
+        }
+
+        if (! $this->app->has('request')) {
+            return;
+        }
+
+        $current = $this->app->make('request');
+        if (! $current instanceof \Illuminate\Http\Request) {
+            return;
+        }
+
+        $this->app->instance('request', RequestCompat::createFrom($current));
     }
 
     /**

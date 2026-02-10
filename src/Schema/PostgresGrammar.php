@@ -32,7 +32,9 @@ class PostgresGrammar extends IlluminatePostgresGrammar
             // We'll use reflection to set the protected property
             if ($grammarReflection->hasProperty('connection')) {
                 $connectionProperty = $grammarReflection->getProperty('connection');
-                $connectionProperty->setAccessible(true);
+                if (PHP_VERSION_ID < 80500) {
+                    $connectionProperty->setAccessible(true);
+                }
                 $connectionProperty->setValue($this, $connection);
             } else {
                 // Fallback: try to call parent, but it might not work
