@@ -130,7 +130,10 @@ class Schema extends IlluminateSchema
         // This compiles all column definitions properly
         $reflection = new \ReflectionClass($grammar);
         $getColumnsMethod = $reflection->getMethod('getColumns');
-        $getColumnsMethod->setAccessible(true);
+        // setAccessible() is deprecated in PHP 8.5+ (has no effect); only call on older PHP
+        if (\PHP_VERSION_ID < 80500) {
+            $getColumnsMethod->setAccessible(true);
+        }
         $columns = $getColumnsMethod->invoke($grammar, $blueprint);
         
         // Check if partition column is an expression (contains function call)

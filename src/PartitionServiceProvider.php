@@ -3,9 +3,9 @@
 namespace Brokenice\LaravelPgsqlPartition;
 
 use Brokenice\LaravelPgsqlPartition\Connectors\ConnectionFactory;
-use Brokenice\LaravelPgsqlPartition\Http\RequestCompat;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\DatabaseServiceProvider;
+use Illuminate\Support\Facades\Request;
 
 /**
  * Class PartitionServiceProvider.
@@ -58,7 +58,7 @@ class PartitionServiceProvider extends DatabaseServiceProvider
             return;
         }
 
-        $this->app->instance('request', RequestCompat::createFrom($current));
+        $this->app->instance('request', Request::createFrom($current));
     }
 
     /**

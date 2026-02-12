@@ -32,7 +32,8 @@ class PostgresGrammar extends IlluminatePostgresGrammar
             // We'll use reflection to set the protected property
             if ($grammarReflection->hasProperty('connection')) {
                 $connectionProperty = $grammarReflection->getProperty('connection');
-                if (PHP_VERSION_ID < 80500) {
+                // setAccessible() is deprecated in PHP 8.5+ (has no effect); only call on older PHP
+                if (\PHP_VERSION_ID < 80500) {
                     $connectionProperty->setAccessible(true);
                 }
                 $connectionProperty->setValue($this, $connection);
