@@ -65,8 +65,13 @@ class YearConnection
         }
 
         $year = (int) app($key);
-        Config::set('database.connections.' . $connName . '.database', $prefix . $year);
-        DB::purge($connName);
+        $targetDatabase = $prefix . $year;
+        $currentDatabase = Config::get('database.connections.' . $connName . '.database');
+
+        if ($currentDatabase !== $targetDatabase) {
+            Config::set('database.connections.' . $connName . '.database', $targetDatabase);
+            DB::purge($connName);
+        }
 
         return DB::connection($connName);
     }
