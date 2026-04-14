@@ -15,10 +15,11 @@ trait SwitchesYearConnection
 
     /**
      * Prefix used to build the schema/database name: {prefix}{year} (e.g. qualisys_2025).
+     * Null lets YearConnection use config pgsql-partition.schema_prefix or its default.
      *
-     * @var string
+     * @var string|null
      */
-    protected $yearSchemaPrefix = 'qualisys_';
+    protected $yearSchemaPrefix = null;
 
     /**
      * Resolve connection using the year from the application context so eager load and other queries use the same DB.
