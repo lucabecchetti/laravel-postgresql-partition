@@ -46,7 +46,7 @@ class YearConnection
      *
      * @param  int|null  $year  Optional; if null, uses year from app context (setYearForRequest).
      * @param  string|null  $connectionName  Config key under database.connections (default: year).
-     * @param  string|null  $schemaPrefix  Prefix for DB name; if null, uses config pgsql-partition.schema_prefix when set, else default qualisys_.
+     * @param  string|null  $schemaPrefix  Optional DB name prefix ({prefix}{year}). Non-empty wins. If null/empty, uses config("pgsql-partition.schema_prefix") when set, else package default qualisys_.
      * @param  string|null  $contextKey  App key for year (default: qualisys.year).
      * @return \Illuminate\Database\Connection
      */
@@ -77,7 +77,9 @@ class YearConnection
     }
 
     /**
-     * @param  string|null  $explicit  Non-empty string wins; null uses config then package default.
+     * Optional prefix: explicit argument → config → default.
+     *
+     * @param  string|null  $explicit  From YearConnection::connection(..., $schemaPrefix) or model $yearSchemaPrefix.
      */
     protected static function resolveSchemaPrefix(?string $explicit): string
     {
